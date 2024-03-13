@@ -1,42 +1,26 @@
 import React from "react";
 import Background from "../assets/formbg.png";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import Button from "./Button";
-import { useFormik } from "formik";
-import { signUpSchema } from "../Schema";
-
-const inputFieldValues={
-  first_name:"",
-  last_name:"",
-  phone:"",
-  email:"",
-  password:"",
-  confirm_password:""
-  
-
-}
-
-
 
 const Form = () => {
-  const {values, errors, handleBlur, touched, handleChange, handleSubmit} = useFormik({
-    initialValues:inputFieldValues,
-    validationSchema:signUpSchema,
-    onSubmit:(values,action)=>{
-      action.resetForm()
-    }
-   
-  })
-
- console.log(values);
-
-
-  const [sub, setSub] = useState(false);
-  const handleSub = () => {
-
-    setSub(true);
-  
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const formSubmit = (data) => {
+    console.log(data);
   };
+
+  // const [sub, setSub] = useState(false);
+  // const handleSub = () => {
+
+  //   setSub(true);
+
+  // };
   return (
     <>
       <div>
@@ -58,102 +42,160 @@ const Form = () => {
             </div>
 
             <div className="mt-5">
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleSubmit(formSubmit)}>
                 <div className="grid grid-cols-2 py-3 gap-6">
                   <div className="">
                     <label className="font-bold text-xs tracking-widest block py-2 ">
                       FIRST NAME
                     </label>
                     <input
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                        errors.firstName ? "border-red-500" : ""
+                      }`}
                       type="text"
                       placeholder="John"
-                      name="first_name"
-                      className="p-2 border-gray-400 border-[1px] w-full"
-                      value={values.first_name}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
+                      {...register("firstName", {
+                        required: "Input field required",
+                        minLength: { value: 3 },
+                        maxLength: { value: 10 },
+                      })}
                     />
-                    {errors.first_name && touched.first_name ? 
-                    <p className="form_warning">{errors.first_name}</p>
-                    : null}
+                    {errors.firstName && (
+                      <p className="pt-1 font-medium text-red-500">
+                        {errors.firstName.message}
+                      </p>
+                    )}
+                    {errors.firstName &&
+                      errors.firstName.type === "minLength" && (
+                        <p className="text-red-500 font-medium">
+                          Minimum length is 3 characters
+                        </p>
+                      )}
+                    {errors.firstName &&
+                      errors.firstName.type === "maxLength" && (
+                        <p className="text-red-500 font-medium">
+                          Maximum length is 10 characters
+                        </p>
+                      )}
                   </div>
                   <div>
                     <label className="font-bold text-xs tracking-widest block py-2">
                       LAST NAME
                     </label>
                     <input
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                        errors.lastName ? "border-red-500" : ""
+                      }`}
                       type="text"
                       placeholder="Doe"
-                      name="last_name"
-                      className="p-2  border-gray-400 border-[1px] w-full"
-                      value={values.last_name}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
+                      {...register("lastName", {
+                        required: "Input field required",
+                        minLength: { value: 3 },
+                        maxLength: { value: 10 },
+                      })}
                     />
-                      {errors.last_name && touched.last_name ? 
-                    <p className="form_warning">{errors.last_name}</p>
-                    : null}
+                    {errors.lastName && (
+                      <p className="pt-1 font-medium text-red-500">
+                        {errors.lastName.message}
+                      </p>
+                    )}
+                    {errors.lastName &&
+                      errors.lastName.type === "minLength" && (
+                        <p className="text-red-500 font-medium">
+                          Minimum length is 3 characters
+                        </p>
+                      )}
+                    {errors.lastName &&
+                      errors.lastName.type === "maxLength" && (
+                        <p className="text-red-500 font-medium">
+                          Maximum length is 10 characters
+                        </p>
+                      )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 py-3 gap-6">
                   <div>
-                    {" "}
                     <label className="font-bold text-xs tracking-widest block py-2">
                       PHONE
                     </label>
                     <input
+                   className= {`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                        errors.phone ? "border-red-500" : ""
+                      }`}
                       type="text"
                       placeholder="123456789"
                       name="phone"
-                      className="p-2  border-gray-400 border-[1px] w-full"
-
-                      value={values.phone}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
+                      
+                      {...register("phone", {
+                        required: "Input field required",
+                        pattern: {
+                          value: /^[0-9]{1,12}$/,
+                          message: "Please enter a valid phone number",
+                        },
+                      })}
                     />
-                     {errors.phone && touched.phone ? 
-                    <p className="form_warning">{errors.phone}</p>
-                    : null}
+
+                    {errors.phone && (
+                      <p className="mt-2 text-red-500 font-medium">
+                        {errors.phone.message}
+                      </p>
+                    )}
                   </div>
                   <div>
-                    {" "}
                     <label className="font-bold text-xs tracking-widest block py-2">
                       EMAIL
                     </label>
                     <input
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                        errors.email ? "border-red-500" : ""
+                      }`}
                       type="text"
                       placeholder="johndoe@gmail.com"
                       name="email"
-                      className="p-2  border-gray-400 border-[1px] w-full"
-                      value={values.email}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
+                      {...register("email", {
+                        required: "Email field is required",
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Invalid email address",
+                        },
+                      })}
                     />
-                     {errors.email && touched.email ? 
-                    <p className="form_warning">{errors.email}</p>
-                    : null}
+                    <p className=" mt-2  text-red-500 font-medium ">
+                      {errors.email?.message}
+                    </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-6 py-3">
                   <div>
-                    {" "}
                     <label className="font-bold text-xs tracking-widest block py-2">
                       PASSWORD
                     </label>
                     <input
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                        errors.password ? "border-red-500" : ""
+                      }`}
                       type="text"
                       placeholder="**********"
                       name="password"
-                      className="p-2  border-gray-400 border-[1px] w-full"
-                      value={values.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
+                      {...register("password", {
+                        required: "Input field required",
+                        minLength: {
+                          value: 6,
+                          message: "Password must be at least 6 characters",
+                        },
+                        pattern: {
+                          value:
+                            /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}$/,
+                          message:
+                            "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character",
+                        },
+                      })}
                     />
-                     {errors.password && touched.password? 
-                    <p className="form_warning">{errors.password}</p>
-                    : null}
+                    <p className="text-red-500 font-medium">
+                      {errors.password?.message}
+                    </p>
                   </div>
 
                   <div>
@@ -161,49 +203,48 @@ const Form = () => {
                       CONFIRM PASSWORD
                     </label>
                     <input
-                      type="text"
+                      className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                        errors.confirm_password ? "border-red-500" : ""
+                      }`}
+                      type="password"
                       placeholder="**********"
-                      name="confirm_password"
-                      className="p-2 border-gray-400 border-[1px] w-full"
-                      value={values.confirm_password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
+                      {...register("confirm_password", {
+                        required: "Input field required",
+                        validate: (data) => {
+                          if (watch("password") !== data) {
+                            return "Password do not match";
+                          }
+                        },
+                      })}
                     />
-                     {errors.confirm_password&& touched.confirm_password ? 
-                    <p className="form_warning">{errors.confirm_password}</p>
-                    : null}
+                    <p className="text-red-500 font-medium">
+                      {errors.confirm_password?.message}
+                    </p>
                   </div>
+                </div>
+                <div className=" my-12">
+                  <Button btnName="Sign UP" />
                 </div>
               </form>
               <div>
-                <div className="flex  mt-8">
+                {/* <div className="flex  mt-8">
                   <input
                     id="checkbox"
                     type="checkbox"
-                    
                     className="w-4 h-4 mt-1 text-blue-600  bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    value ={values.checkbox}
-                      
                   />
                   <label className="ms-2 text-base font-medium text-gray-400 dark:text-black">
                     I accept terms and
                     <br /> conditions{" "}
                   </label>
-                </div>
-              </div>
-              <div className=" my-12">
-                {sub ? (
-                  <Button  btnName="SIGN IN" />
-                ) : (
-                  <Button  onClick = {handleSub} btnName="SIGN UP" />
-                )}
+                </div> */}
               </div>
             </div>
           </div>
         </div>
       </div>
-    </> 
-  )
+    </>
+  );
 };
 
 export default Form;
